@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+cardiac.exe — Custom Cards
+{% endblock %}
+
+
+{% block content %}
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <p class="eyebrow">
+            CARDIAC.EXE
+        </p>
+
+        <h1>
+            CUSTOM<br>
+            CARDS.
+        </h1>
+
+        <p class="hero-text">
+            Unique collectible cards designed
+            for people who want something different.
+        </p>
+
+        <a
+            href="{{ url_for('products') }}"
+            class="button"
+        >
+            EXPLORE COLLECTION
+        </a>
+
+    </div>
+
+</section>
+
+
+<section class="collection">
+
+    <div class="section-header">
+
+        <p class="eyebrow">
+            THE COLLECTION
+        </p>
+
+        <h2>
+            Featured Cards
+        </h2>
+
+    </div>
+
+
+    <div class="product-grid">
+
+        {% for product in products %}
+
+        <article class="product-card">
+
+            <div class="card-image">
+
+                {% if product.image %}
+
+                    <img
+                        src="{{ url_for(
+                            'static',
+                            filename='images/' + product.image
+                        ) }}"
+                        alt="{{ product.name }}"
+                    >
+
+                {% else %}
+
+                    <span>
+                        CARD
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="product-info">
+
+                <h3>
+                    {{ product.name }}
+                </h3>
+
+                <p>
+                    ₹{{ product.price }}
+                </p>
+
+                <a
+                    href="{{ url_for(
+                        'product_detail',
+                        product_id=product.id
+                    ) }}"
+                >
+                    VIEW CARD →
+                </a>
+
+            </div>
+
+        </article>
+
+
+        {% else %}
+
+        <p class="empty-message">
+            Collection coming soon.
+        </p>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}
