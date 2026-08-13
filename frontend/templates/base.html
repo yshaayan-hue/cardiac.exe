@@ -27,7 +27,7 @@
     <header class="navbar">
 
         <a
-            href="{{ url_for('home') }}"
+            href="{{ url_for('main.home') }}"
             class="logo"
         >
             cardiac.exe
@@ -36,15 +36,15 @@
 
         <nav>
 
-            <a href="{{ url_for('home') }}">
+            <a href="{{ url_for('main.home') }}">
                 Home
             </a>
 
-            <a href="{{ url_for('products') }}">
+            <a href="{{ url_for('main.products') }}">
                 Cards
             </a>
 
-            <a href="{{ url_for('cart') }}">
+            <a href="{{ url_for('cart.cart') }}">
                 Cart
             </a>
 

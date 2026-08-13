@@ -5,3 +5,5 @@ __pycache__/
 .idea/
 .env
 .vscode/
+# Flask / SQLite
+instance/*.db

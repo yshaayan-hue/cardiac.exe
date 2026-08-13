@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block title %}
+Order — cardiac.exe
+{% endblock %}
+
+{% block content %}
+
+<section class="collection">
+
+    <p class="eyebrow">
+        YOUR ORDER
+    </p>
+
+    <h1>
+        Complete Your Order
+    </h1>
+
+    <div class="order-container">
+
+        <!-- ORDER SUMMARY -->
+
+        <div class="order-summary">
+
+            <h2>Order Summary</h2>
+
+            {% for item in cart_items %}
+
+                <div class="order-item">
+
+                    <div>
+                        <h3>
+                            {{ item.product.name }}
+                        </h3>
+
+                        <p>
+                            Quantity: {{ item.quantity }}
+                        </p>
+                    </div>
+
+                    <strong>
+                        ₹{{ item.subtotal }}
+                    </strong>
+
+                </div>
+
+            {% endfor %}
+
+            <div class="order-total">
+
+                <h2>
+                    Total: ₹{{ total }}
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <!-- CUSTOMER INFORMATION -->
+
+        <div class="customer-details">
+
+            <h2>
+                Customer Information
+            </h2>
+
+            <form method="POST">
+
+                <div class="form-group">
+
+                    <label for="name">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="phone">
+                        Phone Number
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="address">
+                        Delivery Address
+                    </label>
+
+                    <textarea
+                        id="address"
+                        name="address"
+                        rows="4"
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="city">
+                        City
+                    </label>
+
+                    <input
+                        type="text"
+                        id="city"
+                        name="city"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="pincode">
+                        PIN Code
+                    </label>
+
+                    <input
+                        type="text"
+                        id="pincode"
+                        name="pincode"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="button"
+                >
+                    PLACE ORDER
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

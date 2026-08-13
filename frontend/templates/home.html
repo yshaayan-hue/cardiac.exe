@@ -27,7 +27,7 @@ cardiac.exe — Custom Cards
         </p>
 
         <a
-            href="{{ url_for('products') }}"
+            href="{{ url_for('main.products') }}"
             class="button"
         >
             EXPLORE COLLECTION
@@ -94,7 +94,7 @@ cardiac.exe — Custom Cards
 
                 <a
                     href="{{ url_for(
-                        'product_detail',
+                        'main.product_detail',
                         product_id=product.id
                     ) }}"
                 >

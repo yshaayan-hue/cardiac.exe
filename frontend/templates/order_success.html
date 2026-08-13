@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}
+Order Confirmed — cardiac.exe
+{% endblock %}
+
+{% block content %}
+
+<section class="collection">
+
+    <p class="eyebrow">
+        ORDER CONFIRMED
+    </p>
+
+    <h1>
+        Thank you for your order.
+    </h1>
+
+    <p>
+        Your order has been successfully placed.
+    </p>
+
+    <p>
+        Order #{{ order.id }}
+    </p>
+
+    <p>
+        Total: ₹{{ order.total }}
+    </p>
+
+    <p>
+        A confirmation will be associated with:
+        {{ order.email }}
+    </p>
+
+    <br>
+
+    <a
+        href="{{ url_for('products') }}"
+        class="button"
+    >
+        CONTINUE SHOPPING
+    </a>
+
+</section>
+
+{% endblock %}
