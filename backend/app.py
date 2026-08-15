@@ -1,9 +1,13 @@
 from flask import Flask
 
-from config import Config
-from extensions import db
-
-from routes import main_bp, cart_bp, orders_bp
+try:
+    from .config import Config
+    from .extensions import db
+    from .routes import main_bp, cart_bp, orders_bp
+except ImportError:
+    from config import Config
+    from extensions import db
+    from routes import main_bp, cart_bp, orders_bp
 
 
 app = Flask(

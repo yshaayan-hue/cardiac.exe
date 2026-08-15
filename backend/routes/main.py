@@ -1,6 +1,11 @@
 from flask import Blueprint, render_template
 
-from models import Product
+try:
+    from ..extensions import db
+    from ..models import Product
+except ImportError:
+    from extensions import db
+    from models import Product
 
 
 main_bp = Blueprint("main", __name__)

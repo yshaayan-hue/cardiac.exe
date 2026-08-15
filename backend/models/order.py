@@ -1,4 +1,7 @@
-from extensions import db
+try:
+    from ..extensions import db
+except ImportError:
+    from extensions import db
 
 
 class Order(db.Model):

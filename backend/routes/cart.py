@@ -7,9 +7,12 @@ from flask import (
     request
 )
 
-from extensions import db
-from models import Product
-
+try:
+    from ..extensions import db
+    from ..models import Product
+except ImportError:
+    from extensions import db
+    from models import Product
 
 cart_bp = Blueprint("cart", __name__)
 

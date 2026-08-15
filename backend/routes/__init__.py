@@ -1,3 +1,8 @@
-from routes.main import main_bp
-from routes.cart import cart_bp
-from routes.orders import orders_bp
+from .main import main_bp
+from .cart import cart_bp
+from .orders import orders_bp
+__all__ = [
+    "main_bp",
+    "cart_bp",
+    "orders_bp"
+]
