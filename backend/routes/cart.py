@@ -17,7 +17,7 @@ except ImportError:
 cart_bp = Blueprint("cart", __name__)
 
 
-@cart_bp.route("/cart/add/<int:product_id>")
+@cart_bp.route("/cart/add/<int:product_id>", methods=["POST"])
 def add_to_cart(product_id):
 
     product = Product.query.get_or_404(product_id)
