@@ -101,11 +101,11 @@ def order():
         for item in cart_items:
 
             order_item = OrderItem(
-                order_id=new_order.id,
-                product_id=item["product"].id,
-                quantity=item["quantity"],
-                price=item["product"].price
-            )
+          order_id=new_order.id,
+          product_id=item["product"].id,
+          quantity=item["quantity"],
+           price_at_purchase=item["product"].price
+         )
 
             db.session.add(order_item)
 
