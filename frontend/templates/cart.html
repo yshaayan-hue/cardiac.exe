@@ -1,10 +1,8 @@
 {% extends "base.html" %}
 
-
 {% block title %}
 Cart — cardiac.exe
 {% endblock %}
-
 
 {% block content %}
 
@@ -21,14 +19,13 @@ Cart — cardiac.exe
 
     {% if cart_items %}
 
-        <div class="cart-list">
+        <div class="cart-container">
 
             {% for item in cart_items %}
 
-                <article class="cart-item">
+                <div class="cart-item">
 
-
-                    <!-- Product Image -->
+                    <!-- PRODUCT IMAGE -->
 
                     <div class="cart-image">
 
@@ -53,7 +50,7 @@ Cart — cardiac.exe
                     </div>
 
 
-                    <!-- Product Information -->
+                    <!-- PRODUCT INFORMATION -->
 
                     <div class="cart-info">
 
@@ -66,91 +63,65 @@ Cart — cardiac.exe
                         </p>
 
 
-                        <!-- Quantity Controls -->
-
-                        <div class="quantity-controls">
-
-                            <!-- Decrease -->
-
-                            <form
-                                action="{{ url_for(
-                                    'cart.update_cart',
-                                    product_id=item.product.id
-                                ) }}"
-                                method="POST"
-                            >
-
-                                <input
-                                    type="hidden"
-                                    name="action"
-                                    value="decrease"
-                                >
-
-                                <button
-                                    type="submit"
-                                    class="quantity-button"
-                                >
-                                    −
-                                </button>
-
-                            </form>
-
-
-                            <!-- Current Quantity -->
-
-                            <span class="quantity">
-                                {{ item.quantity }}
-                            </span>
-
-
-                            <!-- Increase -->
-
-                            <form
-                                action="{{ url_for(
-                                    'cart.update_cart',
-                                    product_id=item.product.id
-                                ) }}"
-                                method="POST"
-                            >
-
-                                <input
-                                    type="hidden"
-                                    name="action"
-                                    value="increase"
-                                >
-
-                                <button
-                                    type="submit"
-                                    class="quantity-button"
-                                >
-                                    +
-                                </button>
-
-                            </form>
-
-                        </div>
-
-
-                        <!-- Subtotal -->
-
-                        <strong>
-                            Subtotal: ₹{{ item.subtotal }}
-                        </strong>
-
-
-                        <!-- Remove -->
+                        <!-- UPDATE QUANTITY -->
 
                         <form
+                            method="POST"
+                            action="{{ url_for(
+                                'cart.update_cart',
+                                product_id=item.product.id
+                            ) }}"
+                        >
+
+                            <input
+                                type="hidden"
+                                name="csrf_token"
+                                value="{{ csrf_token() }}"
+                            >
+
+                            <label for="quantity-{{ item.product.id }}">
+                                Quantity
+                            </label>
+
+                            <input
+                                type="number"
+                                id="quantity-{{ item.product.id }}"
+                                name="quantity"
+                                value="{{ item.quantity }}"
+                                min="1"
+                                max="{{ item.product.stock }}"
+                                required
+                            >
+
+                            <button
+                                type="submit"
+                                class="button"
+                            >
+                                UPDATE
+                            </button>
+
+                        </form>
+
+
+                        <!-- REMOVE PRODUCT -->
+
+                        <form
+                            method="POST"
                             action="{{ url_for(
                                 'cart.remove_from_cart',
                                 product_id=item.product.id
                             ) }}"
-                            method="POST"
                         >
+
+                            <input
+                                type="hidden"
+                                name="csrf_token"
+                                value="{{ csrf_token() }}"
+                            >
 
                             <button
                                 type="submit"
-                                class="remove-button"
+                                class="button"
                             >
                                 REMOVE
                             </button>
@@ -159,46 +130,57 @@ Cart — cardiac.exe
 
                     </div>
 
-                </article>
+
+                    <!-- SUBTOTAL -->
+
+                    <div class="cart-subtotal">
+
+                        <strong>
+                            ₹{{ item.subtotal }}
+                        </strong>
+
+                    </div>
+
+                </div>
 
             {% endfor %}
 
+
+            <!-- CART TOTAL -->
+
+            <div class="cart-total">
+
+                <h2>
+                    Total: ₹{{ total }}
+                </h2>
+
+                <a
+                    href="{{ url_for('orders.order') }}"
+                    class="button"
+                >
+                    CHECKOUT
+                </a>
+
+            </div>
+
         </div>
-
-
-        <!-- Cart Total -->
-
-        <div class="cart-total">
-
-            <h2>
-                Total: ₹{{ total }}
-            </h2>
-
-
-            <a
-                href="{{ url_for('orders.order') }}"
-                class="button"
-            >
-                CONTINUE TO ORDER
-            </a>
-
-        </div>
-
 
     {% else %}
 
-        <p>
-            Your cart is empty.
-        </p>
+        <div class="empty-cart">
 
-        <br>
+            <h2>
+                Your cart is empty.
+            </h2>
 
-        <a
-            href="{{ url_for('main.products') }}"
-            class="button"
-        >
-            CONTINUE SHOPPING
-        </a>
+            <a
+                href="{{ url_for('main.products') }}"
+                class="button"
+            >
+                VIEW CARDS
+            </a>
+
+        </div>
 
     {% endif %}
 

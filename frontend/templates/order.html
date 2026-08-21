@@ -67,6 +67,15 @@ Order — cardiac.exe
 
             <form method="POST">
 
+                <!-- CSRF PROTECTION -->
+
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token() }}"
+                >
+
+
                 <div class="form-group">
 
                     <label for="name">

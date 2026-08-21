@@ -1,10 +1,13 @@
 try:
     from ..extensions import db
+    from .product import Product
 except ImportError:
     from extensions import db
+    from .product import Product
 
 
 class Order(db.Model):
+    __tablename__ = "orders"
 
     id = db.Column(
         db.Integer,
@@ -12,12 +15,12 @@ class Order(db.Model):
     )
 
     email = db.Column(
-        db.String(255),
+        db.String(120),
         nullable=False
     )
 
     total = db.Column(
-        db.Integer,
+        db.Float,
         nullable=False
     )
 
@@ -30,11 +33,19 @@ class Order(db.Model):
     created_at = db.Column(
         db.DateTime,
         nullable=False,
-        server_default=db.func.now()
+        default=db.func.current_timestamp()
+    )
+
+    items = db.relationship(
+        "OrderItem",
+        backref="order",
+        lazy=True,
+        cascade="all, delete-orphan"
     )
 
 
 class OrderItem(db.Model):
+    __tablename__ = "order_items"
 
     id = db.Column(
         db.Integer,
@@ -43,7 +54,7 @@ class OrderItem(db.Model):
 
     order_id = db.Column(
         db.Integer,
-        db.ForeignKey("order.id"),
+        db.ForeignKey("orders.id"),
         nullable=False
     )
 
@@ -58,7 +69,12 @@ class OrderItem(db.Model):
         nullable=False
     )
 
-    price = db.Column(
-        db.Integer,
+    price_at_purchase = db.Column(
+        db.Float,
         nullable=False
+    )
+
+    product = db.relationship(
+        "Product",
+        backref="order_items"
     )
