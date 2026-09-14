@@ -1,96 +1,193 @@
 {% extends "base.html" %}
 
-{% block title %}
-{{ product.name }} — cardiac.exe
-{% endblock %}
+{% block title %}{{ product.name }} — cardiac.exe{% endblock %}
 
 {% block content %}
 
-<section class="product-detail">
+<div class="product-detail-layout">
 
-```
-<div class="detail-image">
+    <!-- LEFT COLUMN: 3D CARD SHOWCASE -->
+    <div class="detail-gallery-wrap">
+        <div class="detail-card-viewport">
+            <div class="detail-card-3d">
+                <div class="card-holo-glare"></div>
 
-    {% if product.image %}
+                <div class="card-badge-overlay">
+                    <span class="badge-tag badge-rarity">VAULT SPECIMEN</span>
+                    {% if product.stock > 0 %}
+                        <span class="badge-tag badge-stock">VERIFIED STOCK</span>
+                    {% else %}
+                        <span class="badge-tag badge-soldout">SOLD OUT</span>
+                    {% endif %}
+                </div>
 
-        <img
-            src="{{ url_for(
-                'static',
-                filename='images/' + product.image
-            ) }}"
-            alt="{{ product.name }}"
-        >
+                <div class="detail-card-image">
+                    {% if product.image %}
+                        <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}">
+                    {% else %}
+                        <div style="font-family: var(--font-mono); font-size: 24px; color: var(--text-muted);">CARDIAC.EXE</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
 
-    {% else %}
+        <div style="text-align: center; font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); letter-spacing: 1px;">
+            [ MOVE CURSOR TO INSPECT HOLOGRAPHIC REFLECTION ]
+        </div>
+    </div>
 
-        <span>
-            CARD
-        </span>
+    <!-- RIGHT COLUMN: PRODUCT DETAILS & PURCHASE -->
+    <div class="detail-content-wrap">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+            <a href="{{ url_for('main.home') }}">VAULT</a>
+            <span>/</span>
+            <a href="{{ url_for('main.products') }}">COLLECTION</a>
+            <span>/</span>
+            <span style="color:var(--text-primary)">SPECIMEN #00{{ product.id }}</span>
+        </nav>
 
-    {% endif %}
+        <div class="product-detail-header">
+            <div class="hero-eyebrow-tag" style="margin-bottom: 8px;">
+                <span class="pulse-dot"></span>
+                <span>ORIGINAL SERIES 01 PRESSING</span>
+            </div>
+            <h1>{{ product.name }}</h1>
+        </div>
 
+        <div class="price-stock-bar">
+            <div class="detail-price">₹{{ product.price }}</div>
+            {% if product.stock > 0 %}
+                <div class="stock-indicator-pill">
+                    <span>●</span> {{ product.stock }} UNITS IN VAULT
+                </div>
+            {% else %}
+                <div class="badge-tag badge-soldout" style="padding: 6px 12px; font-size: 12px;">
+                    ARCHIVED / SOLD OUT
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="detail-description">
+            {{ product.description }}
+        </div>
+
+        <!-- PURCHASE ACTIONS -->
+        {% if product.stock > 0 %}
+        <div class="cta-form-block">
+            <form method="POST" action="{{ url_for('cart.add_to_cart', product_id=product.id) }}" class="ajax-cart-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <div class="quantity-picker-row" style="margin-bottom: 18px;">
+                    <span class="quantity-picker-label">SELECT QUANTITY:</span>
+                    <div class="quantity-stepper">
+                        <button type="button" class="stepper-btn btn-minus" aria-label="Decrease quantity">−</button>
+                        <input type="number" name="quantity" class="stepper-input" value="1" min="1" max="{{ product.stock }}" readonly>
+                        <button type="button" class="stepper-btn btn-plus" aria-label="Increase quantity">+</button>
+                    </div>
+                </div>
+
+                <div class="cta-buttons-row">
+                    <button type="submit" class="btn btn-pulse">
+                        ADD TO CART
+                    </button>
+                    <a href="https://wa.me/917400364858?text={{ ('Hello cardiac.exe! I would like to order: ' ~ product.name ~ ' (Price: ₹' ~ product.price ~ ')') | urlencode }}" 
+                       target="_blank" 
+                       rel="noopener noreferrer" 
+                       class="btn btn-whatsapp">
+                        BUY ON WHATSAPP ↗
+                    </a>
+                </div>
+            </form>
+        </div>
+        {% else %}
+        <div class="cta-form-block" style="text-align: center;">
+            <p style="font-family: var(--font-mono); font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
+                THIS SPECIMEN HAS BEEN FULLY ALLOCATED
+            </p>
+            <a href="https://wa.me/917400364858?text={{ ('Hello cardiac.exe! Please notify me when ' ~ product.name ~ ' restocks.') | urlencode }}" 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               class="btn btn-outline">
+                JOIN WHATSAPP WAITLIST ↗
+            </a>
+        </div>
+        {% endif %}
+
+        <!-- SPECIFICATIONS TABLE -->
+        <div>
+            <h4 style="font-family: var(--font-mono); font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px;">
+                CARD SPECIFICATIONS
+            </h4>
+            <table class="specs-table">
+                <tbody>
+                    <tr>
+                        <td>ARCHIVE SERIES</td>
+                        <td>Series 01 Alpha Drop</td>
+                    </tr>
+                    <tr>
+                        <td>CARD MATERIAL</td>
+                        <td>350 GSM German Black-Core Linen Cardstock</td>
+                    </tr>
+                    <tr>
+                        <td>FINISH / EFFECTS</td>
+                        <td>Dual-layered Holographic Rainbow Micro-foil</td>
+                    </tr>
+                    <tr>
+                        <td>CARD DIMENSIONS</td>
+                        <td>Standard TCG (63.5 × 88.9 mm / 2.5 × 3.5 in)</td>
+                    </tr>
+                    <tr>
+                        <td>PACKAGING</td>
+                        <td>Precision Sleeved in Scratch-Resistant Rigid Toploader</td>
+                    </tr>
+                    <tr>
+                        <td>AUTHENTICITY</td>
+                        <td>Direct from Artist Vault with Serial Verification</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
+<!-- RELATED PRODUCTS SECTION -->
+{% if related_products %}
+<section class="section-container" style="border-top: 1px solid var(--border-subtle); padding-top: 60px;">
+    <div class="section-head-bar" style="margin-bottom: 30px;">
+        <div class="section-title-wrap">
+            <p style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-pulse); letter-spacing: 2px; text-transform: uppercase;">
+                MORE FROM THIS DROP
+            </p>
+            <h3>COMPLEMENTARY SPECIMENS</h3>
+        </div>
+    </div>
 
-<div class="detail-info">
-
-    <p class="eyebrow">
-        CARD
-    </p>
-
-    <h1>
-        {{ product.name }}
-    </h1>
-
-    <p class="detail-price">
-        ₹{{ product.price }}
-    </p>
-
-    <p class="description">
-        {{ product.description }}
-    </p>
-
-
-    {% if product.stock > 0 %}
-
-        <p>
-            In stock: {{ product.stock }}
-        </p>
-
-        <form
-            method="POST"
-            action="{{ url_for(
-                'cart.add_to_cart',
-                product_id=product.id
-            ) }}"
-        >
-
-            <input
-                type="hidden"
-                name="csrf_token"
-                value="{{ csrf_token() }}"
-            >
-
-            <button
-                type="submit"
-                class="button"
-            >
-                ADD TO CART
-            </button>
-
-        </form>
-
-    {% else %}
-
-        <p>
-            SOLD OUT
-        </p>
-
-    {% endif %}
-
-</div>
-```
-
+    <div class="cards-grid">
+        {% for rel in related_products %}
+        <article class="product-card-item">
+            <div class="card-3d">
+                <div class="card-holo-glare"></div>
+                <a href="{{ url_for('main.product_detail', product_id=rel.id) }}" class="card-image-box">
+                    {% if rel.image %}
+                        <img src="{{ url_for('static', filename='images/' + rel.image) }}" alt="{{ rel.name }}" loading="lazy">
+                    {% else %}
+                        <span style="font-family: var(--font-mono); font-size: 20px; color: var(--text-muted);">CARDIAC</span>
+                    {% endif %}
+                </a>
+                <div class="card-body">
+                    <h4 class="card-title">
+                        <a href="{{ url_for('main.product_detail', product_id=rel.id) }}">{{ rel.name }}</a>
+                    </h4>
+                    <div class="card-price-row">
+                        <span class="card-price">₹{{ rel.price }}</span>
+                        <a href="{{ url_for('main.product_detail', product_id=rel.id) }}" class="btn btn-outline btn-sm">VIEW →</a>
+                    </div>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
 </section>
+{% endif %}
 
 {% endblock %}

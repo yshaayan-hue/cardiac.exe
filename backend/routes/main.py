@@ -37,8 +37,20 @@ def products():
 def product_detail(product_id):
 
     product = Product.query.get_or_404(product_id)
+    related_products = Product.query.filter(Product.id != product_id).limit(3).all()
 
     return render_template(
         "product_detail.html",
-        product=product
+        product=product,
+        related_products=related_products
     )
+
+
+@main_bp.route("/login")
+def login():
+    return render_template("auth/login.html")
+
+
+@main_bp.route("/register")
+def register():
+    return render_template("auth/register.html")

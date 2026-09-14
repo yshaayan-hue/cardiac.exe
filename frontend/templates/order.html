@@ -1,190 +1,125 @@
 {% extends "base.html" %}
 
-{% block title %}
-Order — cardiac.exe
-{% endblock %}
+{% block title %}Complete Order — cardiac.exe{% endblock %}
 
 {% block content %}
 
-<section class="collection">
+<div class="section-container" style="padding-top: 40px;">
 
-    <p class="eyebrow">
-        YOUR ORDER
-    </p>
-
-    <h1>
-        Complete Your Order
-    </h1>
-
-    <div class="order-container">
-
-        <!-- ORDER SUMMARY -->
-
-        <div class="order-summary">
-
-            <h2>Order Summary</h2>
-
-            {% for item in cart_items %}
-
-                <div class="order-item">
-
-                    <div>
-                        <h3>
-                            {{ item.product.name }}
-                        </h3>
-
-                        <p>
-                            Quantity: {{ item.quantity }}
-                        </p>
-                    </div>
-
-                    <strong>
-                        ₹{{ item.subtotal }}
-                    </strong>
-
-                </div>
-
-            {% endfor %}
-
-            <div class="order-total">
-
-                <h2>
-                    Total: ₹{{ total }}
-                </h2>
-
-            </div>
-
+    <!-- CHECKOUT STEPPER HEADER -->
+    <div class="section-head-bar">
+        <div class="section-title-wrap">
+            <p style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-pulse); letter-spacing: 2px; text-transform: uppercase;">
+                STAGE 02 // DISPATCH COURIER DETAILS
+            </p>
+            <h2>FINALISE ORDER</h2>
+            <p class="section-subtitle">Please provide your verified dispatch details to complete your order allocation.</p>
         </div>
-
-
-        <!-- CUSTOMER INFORMATION -->
-
-        <div class="customer-details">
-
-            <h2>
-                Customer Information
-            </h2>
-
-            <form method="POST">
-
-                <!-- CSRF PROTECTION -->
-
-                <input
-                    type="hidden"
-                    name="csrf_token"
-                    value="{{ csrf_token() }}"
-                >
-
-
-                <div class="form-group">
-
-                    <label for="name">
-                        Full Name
-                    </label>
-
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="email">
-                        Email
-                    </label>
-
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="phone">
-                        Phone Number
-                    </label>
-
-                    <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="address">
-                        Delivery Address
-                    </label>
-
-                    <textarea
-                        id="address"
-                        name="address"
-                        rows="4"
-                        required
-                    ></textarea>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="city">
-                        City
-                    </label>
-
-                    <input
-                        type="text"
-                        id="city"
-                        name="city"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="pincode">
-                        PIN Code
-                    </label>
-
-                    <input
-                        type="text"
-                        id="pincode"
-                        name="pincode"
-                        required
-                    >
-
-                </div>
-
-
-                <button
-                    type="submit"
-                    class="button"
-                >
-                    PLACE ORDER
-                </button>
-
-            </form>
-
+        <div>
+            <a href="{{ url_for('cart.cart') }}" class="btn btn-outline btn-sm">
+                ← RETURN TO CART
+            </a>
         </div>
-
     </div>
 
-</section>
+    {% if error %}
+    <div style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; padding: 14px 20px; border-radius: var(--radius-sm); margin-bottom: 30px; font-family: var(--font-mono); font-size: 13px;">
+        [!] {{ error }}
+    </div>
+    {% endif %}
+
+    <div class="checkout-layout">
+
+        <!-- CUSTOMER INFORMATION FORM -->
+        <div class="checkout-form-card">
+            <h3 style="font-family: var(--font-display); font-size: 22px; text-transform: uppercase; border-bottom: 1px solid var(--border-subtle); padding-bottom: 16px;">
+                CUSTOMER & SHIPPING INFO
+            </h3>
+
+            <form method="POST" action="{{ url_for('orders.order') }}" style="display: flex; flex-direction: column; gap: 20px;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label for="name">FULL NAME *</label>
+                        <input type="text" id="name" name="name" class="form-input" placeholder="e.g. John Doe" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">EMAIL ADDRESS *</label>
+                        <input type="email" id="email" name="email" class="form-input" placeholder="e.g. collector@cardiac.exe" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">WHATSAPP MOBILE NUMBER *</label>
+                    <input type="tel" id="phone" name="phone" class="form-input" placeholder="+91 XXXXXXXXXX" required>
+                    <span style="font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);">
+                        Used to send tracking photos and coordinate delivery privately.
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">STREET DELIVERY ADDRESS *</label>
+                    <textarea id="address" name="address" class="form-textarea" rows="3" placeholder="Apartment, Studio, Street and Landmark" required></textarea>
+                </div>
+
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label for="city">CITY / DISTRICT *</label>
+                        <input type="text" id="city" name="city" class="form-input" placeholder="e.g. Mumbai" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pincode">POSTAL PIN CODE *</label>
+                        <input type="text" id="pincode" name="pincode" class="form-input" placeholder="e.g. 400001" required>
+                    </div>
+                </div>
+
+                <div style="margin-top: 10px;">
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 18px;">
+                        CONFIRM ALLOCATION & PLACE ORDER →
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- STICKY ORDER MINI RECAP -->
+        <aside class="summary-box" aria-label="Order Recap">
+            <h3>SPECIMEN RECAP</h3>
+
+            <div style="display: flex; flex-direction: column; gap: 14px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 20px;">
+                {% for item in cart_items %}
+                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+                    <div>
+                        <div style="font-weight: 700;">{{ item.product.name }}</div>
+                        <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);">
+                            Qty: {{ item.quantity }} × ₹{{ item.product.price }}
+                        </div>
+                    </div>
+                    <div style="font-family: var(--font-mono); font-weight: 700;">
+                        ₹{{ item.subtotal }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="summary-row">
+                <span>Protective Packaging</span>
+                <span style="color:var(--accent-green)">INCLUDED</span>
+            </div>
+
+            <div class="summary-row total">
+                <span>TOTAL DUE</span>
+                <span style="color:var(--accent-pulse)">₹{{ total }}</span>
+            </div>
+
+            <div style="background: var(--bg-base); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); line-height: 1.6;">
+                🛡 All cards ship sealed in rigid toploaders inside discreet reinforced waterproof packaging.
+            </div>
+        </aside>
+
+    </div>
+</div>
 
 {% endblock %}

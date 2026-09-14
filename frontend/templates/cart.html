@@ -1,189 +1,165 @@
 {% extends "base.html" %}
 
-{% block title %}
-Cart — cardiac.exe
-{% endblock %}
+{% block title %}Cart — cardiac.exe{% endblock %}
 
 {% block content %}
 
-<section class="collection">
-
-    <p class="eyebrow">
-        YOUR CART
-    </p>
-
-    <h1>
-        Shopping Cart
-    </h1>
-
+<div class="section-container" style="padding-top: 40px;">
+    <div class="section-head-bar">
+        <div class="section-title-wrap">
+            <p style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-pulse); letter-spacing: 2px; text-transform: uppercase;">
+                ORDER ALLOCATION
+            </p>
+            <h2>SHOPPING CART</h2>
+            <p class="section-subtitle">Review your selected specimens prior to dispatch confirmation.</p>
+        </div>
+        <div>
+            <a href="{{ url_for('main.products') }}" class="btn btn-outline btn-sm">
+                ← CONTINUE BROWSING
+            </a>
+        </div>
+    </div>
 
     {% if cart_items %}
+    <div class="cart-page-layout">
 
-        <div class="cart-container">
-
+        <!-- CART ITEMS LIST -->
+        <div class="cart-items-wrapper">
             {% for item in cart_items %}
+            <div class="cart-item-card">
 
-                <div class="cart-item">
-
-                    <!-- PRODUCT IMAGE -->
-
-                    <div class="cart-image">
-
-                        {% if item.product.image %}
-
-                            <img
-                                src="{{ url_for(
-                                    'static',
-                                    filename='images/' + item.product.image
-                                ) }}"
-                                alt="{{ item.product.name }}"
-                            >
-
-                        {% else %}
-
-                            <span>
-                                CARD
-                            </span>
-
-                        {% endif %}
-
-                    </div>
-
-
-                    <!-- PRODUCT INFORMATION -->
-
-                    <div class="cart-info">
-
-                        <h2>
-                            {{ item.product.name }}
-                        </h2>
-
-                        <p>
-                            ₹{{ item.product.price }}
-                        </p>
-
-
-                        <!-- UPDATE QUANTITY -->
-
-                        <form
-                            method="POST"
-                            action="{{ url_for(
-                                'cart.update_cart',
-                                product_id=item.product.id
-                            ) }}"
-                        >
-
-                            <input
-                                type="hidden"
-                                name="csrf_token"
-                                value="{{ csrf_token() }}"
-                            >
-
-                            <label for="quantity-{{ item.product.id }}">
-                                Quantity
-                            </label>
-
-                            <input
-                                type="number"
-                                id="quantity-{{ item.product.id }}"
-                                name="quantity"
-                                value="{{ item.quantity }}"
-                                min="1"
-                                max="{{ item.product.stock }}"
-                                required
-                            >
-
-                            <button
-                                type="submit"
-                                class="button"
-                            >
-                                UPDATE
-                            </button>
-
-                        </form>
-
-
-                        <!-- REMOVE PRODUCT -->
-
-                        <form
-                            method="POST"
-                            action="{{ url_for(
-                                'cart.remove_from_cart',
-                                product_id=item.product.id
-                            ) }}"
-                        >
-
-                            <input
-                                type="hidden"
-                                name="csrf_token"
-                                value="{{ csrf_token() }}"
-                            >
-
-                            <button
-                                type="submit"
-                                class="button"
-                            >
-                                REMOVE
-                            </button>
-
-                        </form>
-
-                    </div>
-
-
-                    <!-- SUBTOTAL -->
-
-                    <div class="cart-subtotal">
-
-                        <strong>
-                            ₹{{ item.subtotal }}
-                        </strong>
-
-                    </div>
-
+                <!-- CARD THUMBNAIL -->
+                <div class="cart-item-thumb">
+                    {% if item.product.image %}
+                        <img src="{{ url_for('static', filename='images/' + item.product.image) }}" alt="{{ item.product.name }}">
+                    {% else %}
+                        <span style="font-family: var(--font-mono); font-size: 14px; color: var(--text-muted);">CARD</span>
+                    {% endif %}
                 </div>
 
+                <!-- CARD INFO -->
+                <div class="cart-item-info">
+                    <span style="font-family: var(--font-mono); font-size: 10px; color: var(--accent-pulse); letter-spacing: 1px;">
+                        SPECIMEN #00{{ item.product.id }}
+                    </span>
+                    <h3>
+                        <a href="{{ url_for('main.product_detail', product_id=item.product.id) }}">
+                            {{ item.product.name }}
+                        </a>
+                    </h3>
+                    <p>₹{{ item.product.price }} <span style="font-size: 11px; color: var(--text-muted);">each</span></p>
+                </div>
+
+                <!-- CONTROLS & QUANTITY STEPPER -->
+                <div class="cart-item-controls">
+                    <div class="quantity-stepper">
+                        <!-- DECREASE BUTTON -->
+                        <form method="POST" action="{{ url_for('cart.update_cart', product_id=item.product.id) }}" style="display:inline; margin:0;">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <input type="hidden" name="action" value="decrease">
+                            <button type="submit" class="stepper-btn" aria-label="Decrease quantity">−</button>
+                        </form>
+
+                        <span class="stepper-input" style="display:flex; align-items:center; justify-content:center;">
+                            {{ item.quantity }}
+                        </span>
+
+                        <!-- INCREASE BUTTON -->
+                        <form method="POST" action="{{ url_for('cart.update_cart', product_id=item.product.id) }}" style="display:inline; margin:0;">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <input type="hidden" name="action" value="increase">
+                            <button type="submit" class="stepper-btn" {% if item.quantity >= item.product.stock %}disabled{% endif %} aria-label="Increase quantity">+</button>
+                        </form>
+                    </div>
+
+                    <!-- REMOVE BUTTON -->
+                    <form method="POST" action="{{ url_for('cart.remove_from_cart', product_id=item.product.id) }}" style="display:inline; margin:0;">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="remove-btn" title="Remove from Cart" aria-label="Remove item">
+                            ✕
+                        </button>
+                    </form>
+                </div>
+
+                <!-- SUBTOTAL -->
+                <div class="cart-item-subtotal">
+                    ₹{{ item.subtotal }}
+                </div>
+            </div>
             {% endfor %}
+        </div>
 
+        <!-- STICKY ORDER SUMMARY -->
+        <aside class="summary-box" aria-label="Order Summary">
+            <h3>ORDER SUMMARY</h3>
 
-            <!-- CART TOTAL -->
-
-            <div class="cart-total">
-
-                <h2>
-                    Total: ₹{{ total }}
-                </h2>
-
-                <a
-                    href="{{ url_for('orders.order') }}"
-                    class="button"
-                >
-                    CHECKOUT
-                </a>
-
+            <div class="summary-row">
+                <span>Total Items</span>
+                <span>{{ cart_items | map(attribute='quantity') | sum }} Cards</span>
             </div>
 
-        </div>
+            <div class="summary-row">
+                <span>Card Stock</span>
+                <span>350 GSM Black Core</span>
+            </div>
+
+            <div class="summary-row">
+                <span>Protective Packaging</span>
+                <span style="color:var(--accent-green)">INCLUDED (Free)</span>
+            </div>
+
+            <div class="summary-row">
+                <span>Shipping Calculation</span>
+                <span>Calculated on WhatsApp</span>
+            </div>
+
+            <div class="summary-row total">
+                <span>ESTIMATED TOTAL</span>
+                <span style="color:var(--accent-pulse)">₹{{ total }}</span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
+                <a href="{{ url_for('orders.order') }}" class="btn btn-primary" style="width: 100%;">
+                    CHECKOUT DETAILS →
+                </a>
+
+                {% set wa_msg = 'Hello cardiac.exe! I would like to order the following cards from my cart:%0A' %}
+                {% for it in cart_items %}
+                    {% set wa_msg = wa_msg ~ '- ' ~ it.product.name ~ ' (x' ~ it.quantity ~ ') : ₹' ~ it.subtotal ~ '%0A' %}
+                {% endfor %}
+                {% set wa_msg = wa_msg ~ 'Total: ₹' ~ total %}
+
+                <a href="https://wa.me/917400364858?text={{ wa_msg }}" 
+                   target="_blank" 
+                   rel="noopener noreferrer" 
+                   class="btn btn-whatsapp" 
+                   style="width: 100%;">
+                    QUICK ORDER ON WHATSAPP ↗
+                </a>
+            </div>
+
+            <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); line-height: 1.5; border-top: 1px solid var(--border-subtle); padding-top: 14px;">
+                ● Payment and private dispatch are verified directly between buyer and seller.
+            </div>
+        </aside>
+
+    </div>
 
     {% else %}
 
-        <div class="empty-cart">
-
-            <h2>
-                Your cart is empty.
-            </h2>
-
-            <a
-                href="{{ url_for('main.products') }}"
-                class="button"
-            >
-                VIEW CARDS
-            </a>
-
-        </div>
+    <!-- EMPTY CART STATE -->
+    <div class="empty-cart-container">
+        <div class="empty-cart-icon">🂠</div>
+        <h2 style="font-family: var(--font-display); font-size: 28px; text-transform: uppercase;">YOUR CART IS EMPTY</h2>
+        <p style="color: var(--text-secondary); max-width: 400px;">
+            No collectible cards have been allocated yet. Browse the current Series 01 drop to add custom prints to your order.
+        </p>
+        <a href="{{ url_for('main.products') }}" class="btn btn-primary" style="margin-top: 10px;">
+            VIEW AVAILABLE CARDS →
+        </a>
+    </div>
 
     {% endif %}
-
-</section>
+</div>
 
 {% endblock %}

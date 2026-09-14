@@ -29,15 +29,25 @@ class Config:
         "SECRET_KEY"
     )
 
+    JWT_SECRET_KEY = os.getenv(
+        "JWT_SECRET_KEY"
+    )
+
+    JWT_ACCESS_TOKEN_EXPIRES = 60 * 60
+
     SQLALCHEMY_DATABASE_URI = (
         "sqlite:///" + DATABASE_PATH
     )
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    # Session cookie security
 
     SESSION_COOKIE_HTTPONLY = True
+
     SESSION_COOKIE_SAMESITE = "Lax"
 
-    
+    # Local development uses HTTP.
+    # Change to True when deployed with HTTPS.
+
     SESSION_COOKIE_SECURE = False

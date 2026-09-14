@@ -1,58 +1,108 @@
 {% extends "base.html" %}
 
-{% block title %}
-Order Confirmed — cardiac.exe
-{% endblock %}
+{% block title %}Order Confirmed #{{ order.id }} — cardiac.exe{% endblock %}
 
 {% block content %}
 
-<section class="collection">
+<div class="success-container">
+    <div class="receipt-card">
 
-    <p class="eyebrow">
-        ORDER CONFIRMED
-    </p>
+        <div class="receipt-header">
+            <div class="receipt-badge">✓</div>
+            <p style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-pulse); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px;">
+                ALLOCATION RECORDED // ORDER #CRD-00{{ order.id }}
+            </p>
+            <h1>ORDER CONFIRMED</h1>
+            <p style="color: var(--text-secondary); font-size: 14px; max-width: 480px; margin: 0 auto;">
+                Thank you for your order. Your cards have been reserved in the vault and are ready for private dispatch confirmation.
+            </p>
+        </div>
 
-    <h1>
-        Thank you for your order.
-    </h1>
+        <!-- RECEIPT META GRID -->
+        <div class="receipt-info-grid">
+            <div class="receipt-info-item">
+                <span>ORDER SPECIMEN ID</span>
+                <strong>#CRD-00{{ order.id }}</strong>
+            </div>
 
-    <p>
-        Your order has been successfully placed.
-    </p>
+            <div class="receipt-info-item">
+                <span>FULFILLMENT STATUS</span>
+                <strong style="color:var(--accent-pulse);">● PENDING WHATSAPP VERIFICATION</strong>
+            </div>
 
-    <p>
-        Order #{{ order.id }}
-    </p>
+            <div class="receipt-info-item">
+                <span>ASSOCIATED EMAIL</span>
+                <strong>{{ order.email }}</strong>
+            </div>
 
-    <p>
-        Total: ₹{{ order.total }}
-    </p>
+            <div class="receipt-info-item">
+                <span>ORDER TOTAL</span>
+                <strong style="font-size: 16px;">₹{{ order.total }}</strong>
+            </div>
+        </div>
 
-    <p>
-        A confirmation will be associated with:
-        {{ order.email }}
-    </p>
+        <!-- ITEMIZED LIST -->
+        <h4 style="font-family: var(--font-mono); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px;">
+            ITEMIZED BREAKDOWN
+        </h4>
 
-    <br>
+        <div class="receipt-items-list">
+            {% for item in order.items %}
+            <div class="receipt-item-line">
+                <div>
+                    <strong>{{ item.product.name }}</strong>
+                    <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-left: 8px;">
+                        (Qty: {{ item.quantity }})
+                    </span>
+                </div>
+                <div style="font-family: var(--font-mono); font-weight: 700;">
+                    ₹{{ item.price_at_purchase * item.quantity }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
 
-    <a
-        href="https://wa.me/7400364858"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="button"
-    >
-        CONTINUE ON WHATSAPP
-    </a>
+        <!-- PREPARE WHATSAPP MESSAGE TEXT -->
+        {% set wa_text = 'Hello cardiac.exe! I have placed Order #CRD-00' ~ order.id ~ ' for ₹' ~ order.total ~ '.%0AItems:%0A' %}
+        {% for itm in order.items %}
+            {% set wa_text = wa_text ~ '- ' ~ itm.product.name ~ ' (x' ~ itm.quantity ~ ')%0A' %}
+        {% endfor %}
+        {% set wa_text = wa_text ~ '%0APlease confirm availability and dispatch details.' %}
 
-    <br><br>
+        <!-- WHATSAPP NEXT STEPS BOX -->
+        <div class="whatsapp-action-box">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <span style="font-size: 20px;">💬</span>
+                <h3 style="font-size: 18px; font-weight: 700;">FINAL STEP: CONFIRM ON WHATSAPP</h3>
+            </div>
+            <p style="font-size: 13px; color: var(--text-secondary); max-width: 500px; margin: 0 auto;">
+                To finalize payment and arrange discreet tracked dispatch, click below to send your pre-filled order receipt directly to the seller via WhatsApp.
+            </p>
 
-    <a
-        href="{{ url_for('main.products') }}"
-        class="button"
-    >
-        CONTINUE SHOPPING
-    </a>
+            <div>
+                <a href="https://wa.me/917400364858?text={{ wa_text }}" 
+                   target="_blank" 
+                   rel="noopener noreferrer" 
+                   class="btn btn-whatsapp" 
+                   style="width: 100%; max-width: 400px; margin: 0 auto; padding: 16px;">
+                    CONFIRM ORDER ON WHATSAPP ↗
+                </a>
+            </div>
+        </div>
 
-</section>
+        <!-- ACTION BUTTONS -->
+        <div style="display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 36px;">
+            {% set copy_text = 'Order #CRD-00' ~ order.id ~ ' | Total: ₹' ~ order.total ~ ' | Email: ' ~ order.email %}
+            <button type="button" class="btn btn-outline btn-sm btn-copy-order" data-copy="{{ copy_text }}">
+                COPY ORDER SUMMARY
+            </button>
+
+            <a href="{{ url_for('main.products') }}" class="btn btn-primary btn-sm">
+                CONTINUE SHOPPING →
+            </a>
+        </div>
+
+    </div>
+</div>
 
 {% endblock %}

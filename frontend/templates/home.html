@@ -1,121 +1,218 @@
 {% extends "base.html" %}
 
-
-{% block title %}
-cardiac.exe — Custom Cards
-{% endblock %}
-
+{% block title %}cardiac.exe — Bespoke Trading Cards & Archival Collectibles{% endblock %}
 
 {% block content %}
 
+<!-- HERO SECTION -->
 <section class="hero">
+    <div class="hero-bg-glow"></div>
 
     <div class="hero-content">
-
-        <p class="eyebrow">
-            CARDIAC.EXE
-        </p>
+        <div class="hero-eyebrow-tag">
+            <span class="pulse-dot"></span>
+            <span>SERIES 01 // ARCHIVAL VAULT</span>
+        </div>
 
         <h1>
-            CUSTOM<br>
+            BESPOKE<br>
+            <span class="highlight">COLLECTIBLE</span><br>
             CARDS.
         </h1>
 
-        <p class="hero-text">
-            Unique collectible cards designed
-            for people who want something different.
+        <p class="hero-desc">
+            Precision-engineered for discerning collectors. Original artworks pressed on 350&nbsp;GSM German black-core cardstock with holographic micro-foil elements and individually serialized prints.
         </p>
 
-        <a
-            href="{{ url_for('main.products') }}"
-            class="button"
-        >
-            EXPLORE COLLECTION
-        </a>
+        <div class="hero-actions">
+            <a href="#catalogue" class="btn btn-primary">
+                EXPLORE COLLECTION ↓
+            </a>
+            <a href="https://wa.me/917400364858" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">
+                WHATSAPP CONCIERGE ↗
+            </a>
+        </div>
 
+        <div class="hero-stats">
+            <div class="stat-item">
+                <h4>350 GSM</h4>
+                <p>Black-Core Stock</p>
+            </div>
+            <div class="stat-item">
+                <h4>ORIGINAL</h4>
+                <p>Curated Artwork</p>
+            </div>
+            <div class="stat-item">
+                <h4>LIMITED</h4>
+                <p>Numbered Pressings</p>
+            </div>
+        </div>
     </div>
 
+    <!-- HERO 3D CARD SHOWCASE -->
+    <div class="hero-visual">
+        <div class="card-3d-wrapper">
+            <div class="card-3d">
+                <div class="card-holo-glare"></div>
+                <div class="card-badge-overlay">
+                    <span class="badge-tag badge-rarity">VAULT EDITION</span>
+                    <span class="badge-tag badge-stock">LIVE DROP</span>
+                </div>
+                <div class="card-image-box">
+                    {% if products and products[0].image %}
+                        <img src="{{ url_for('static', filename='images/' + products[0].image) }}" alt="Featured Card">
+                    {% else %}
+                        <div style="font-family: var(--font-mono); font-size: 24px; color: var(--text-muted);">CARDIAC.EXE</div>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <div class="card-meta-row">
+                        <span class="card-serial">SPECIMEN // SER.01</span>
+                        <span style="font-family: var(--font-mono); font-size: 10px; color: var(--accent-pulse);">● ACTIVE</span>
+                    </div>
+                    <h3 class="card-title">{% if products %}{{ products[0].name }}{% else %}Card A{% endif %}</h3>
+                    <div class="card-price-row">
+                        <span class="card-price">₹{% if products %}{{ products[0].price }}{% else %}499{% endif %}</span>
+                        <span class="card-stock-text">350 GSM FOIL</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
+<!-- FEATURES STRIP -->
+<section class="features-strip">
+    <div class="feature-box">
+        <span class="feature-number">01 // INTEGRITY</span>
+        <h3>Heavyweight Black Core</h3>
+        <p>Manufactured using genuine high-density 350 GSM cardstock to prevent bending, fading, and environmental humidity degradation.</p>
+    </div>
+    <div class="feature-box">
+        <span class="feature-number">02 // HOLOGRAPHY</span>
+        <h3>Dynamic Foil Glare</h3>
+        <p>Hand-crafted optical micro-patterns that capture light dynamically, elevating each custom design into a museum-grade collectible.</p>
+    </div>
+    <div class="feature-box">
+        <span class="feature-number">03 // DIRECT ORDERING</span>
+        <h3>WhatsApp Concierge</h3>
+        <p>Private collector fulfillment via direct encrypted WhatsApp communication. Real-time availability verification and white-glove packaging.</p>
+    </div>
+</section>
 
-<section class="collection">
-
-    <div class="section-header">
-
-        <p class="eyebrow">
-            THE COLLECTION
-        </p>
-
-        <h2>
-            Featured Cards
-        </h2>
-
+<!-- COLLECTION SECTION -->
+<section class="section-container" id="catalogue">
+    <div class="section-head-bar">
+        <div class="section-title-wrap">
+            <p style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-pulse); letter-spacing: 2px; text-transform: uppercase;">
+                SERIES 01 CATALOGUE
+            </p>
+            <h2>FEATURED SPECIMENS</h2>
+            <p class="section-subtitle">Curated drops available for order. All cards arrive in rigid protective sleeves.</p>
+        </div>
     </div>
 
+    <!-- FILTER & SEARCH TOOLBAR -->
+    <div class="filter-toolbar">
+        <div class="search-input-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="cardSearchInput" class="search-field" placeholder="Search cards by name or specimen code...">
+        </div>
 
-    <div class="product-grid">
+        <div class="filter-pills-wrap">
+            <button type="button" class="filter-pill active" data-filter="all">ALL CARDS</button>
+            <button type="button" class="filter-pill" data-filter="instock">IN STOCK</button>
+            <button type="button" class="filter-pill" data-filter="under700">UNDER ₹700</button>
+            <button type="button" class="filter-pill" data-filter="premium">PREMIUM (₹700+)</button>
+        </div>
 
+        <select id="cardSortSelect" class="sort-select" aria-label="Sort Collection">
+            <option value="default">Sort: Default Order</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="name">Name: A to Z</option>
+        </select>
+    </div>
+
+    <!-- PRODUCT CARDS GRID -->
+    <div class="cards-grid" id="cardsGrid">
         {% for product in products %}
+        <article class="product-card-item" 
+                 data-title="{{ product.name }}" 
+                 data-price="{{ product.price }}" 
+                 data-stock="{{ product.stock }}">
+            <div class="card-3d">
+                <div class="card-holo-glare"></div>
 
-        <article class="product-card">
+                <div class="card-badge-overlay">
+                    <span class="badge-tag badge-rarity">SER.01</span>
+                    {% if product.stock > 0 %}
+                        <span class="badge-tag badge-stock">{{ product.stock }} IN VAULT</span>
+                    {% else %}
+                        <span class="badge-tag badge-soldout">ARCHIVED</span>
+                    {% endif %}
+                </div>
 
-            <div class="card-image">
-
-                {% if product.image %}
-
-                    <img
-                        src="{{ url_for(
-                            'static',
-                            filename='images/' + product.image
-                        ) }}"
-                        alt="{{ product.name }}"
-                    >
-
-                {% else %}
-
-                    <span>
-                        CARD
-                    </span>
-
-                {% endif %}
-
-            </div>
-
-
-            <div class="product-info">
-
-                <h3>
-                    {{ product.name }}
-                </h3>
-
-                <p>
-                    ₹{{ product.price }}
-                </p>
-
-                <a
-                    href="{{ url_for(
-                        'main.product_detail',
-                        product_id=product.id
-                    ) }}"
-                >
-                    VIEW CARD →
+                <a href="{{ url_for('main.product_detail', product_id=product.id) }}" class="card-image-box">
+                    {% if product.image %}
+                        <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}" loading="lazy">
+                    {% else %}
+                        <span style="font-family: var(--font-mono); font-size: 20px; color: var(--text-muted);">CARDIAC</span>
+                    {% endif %}
                 </a>
 
+                <div class="card-body">
+                    <div class="card-meta-row">
+                        <span class="card-serial">SPECIMEN #00{{ product.id }}</span>
+                        <span class="card-stock-text">350 GSM</span>
+                    </div>
+
+                    <h3 class="card-title">
+                        <a href="{{ url_for('main.product_detail', product_id=product.id) }}">
+                            {{ product.name }}
+                        </a>
+                    </h3>
+
+                    <div class="card-price-row">
+                        <span class="card-price">₹{{ product.price }}</span>
+                        <span class="card-stock-text">{% if product.stock > 0 %}Available{% else %}Sold Out{% endif %}</span>
+                    </div>
+
+                    <div class="card-actions">
+                        <a href="{{ url_for('main.product_detail', product_id=product.id) }}" class="btn btn-outline btn-sm">
+                            INSPECT CARD →
+                        </a>
+
+                        {% if product.stock > 0 %}
+                        <form method="POST" action="{{ url_for('cart.add_to_cart', product_id=product.id) }}" class="ajax-cart-form" style="margin:0;">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit" class="btn btn-primary btn-sm btn-icon" title="Add to Cart">
+                                +
+                            </button>
+                        </form>
+                        {% else %}
+                        <button class="btn btn-outline btn-sm" disabled style="opacity: 0.4;">
+                            OUT
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
-
         </article>
-
-
         {% else %}
-
-        <p class="empty-message">
-            Collection coming soon.
-        </p>
-
+        <div class="empty-cards-state">
+            <h3>NO SPECIMENS FOUND</h3>
+            <p style="color:var(--text-secondary);">The cardiac.exe archive is currently undergoing maintenance.</p>
+        </div>
         {% endfor %}
-
     </div>
 
+    <!-- Empty Search Results Message -->
+    <div id="noCardsFound" class="empty-cards-state" style="display: none; margin-top: 30px;">
+        <h3>NO MATCHING CARDS</h3>
+        <p style="color:var(--text-secondary);">Try adjusting your search keywords or active filter criteria.</p>
+    </div>
 </section>
 
 {% endblock %}
