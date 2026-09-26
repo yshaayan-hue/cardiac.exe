@@ -1,0 +1,233 @@
+{
+  "communities": {
+    "0": [
+      "backend_extensions",
+      "backend_models_user",
+      "backend_models_user_user",
+      "backend_models_user_user_check_password",
+      "backend_models_user_user_set_password",
+      "backend_routes_auth",
+      "backend_routes_auth_login",
+      "backend_routes_auth_me",
+      "backend_routes_auth_py_route",
+      "backend_routes_auth_register",
+      "backend_routes_auth_verify_email",
+      "backend_services_email_verification_generate_verification_token",
+      "backend_services_email_verification_verify_verification_token",
+      "exempt",
+      "flask_jwt_extended",
+      "flask_sqlalchemy",
+      "flask_wtf_csrf",
+      "jwt_required",
+      "werkzeug_security"
+    ],
+    "1": [
+      "backend_models_init",
+      "backend_models_order",
+      "backend_models_order_order",
+      "backend_models_order_orderitem",
+      "backend_models_product",
+      "backend_models_product_product",
+      "backend_routes_orders",
+      "backend_routes_orders_order",
+      "backend_routes_orders_py_route",
+      "remove",
+      "seed",
+      "tests_test_order_post",
+      "tests_test_order_post_setup_function",
+      "tests_test_order_post_test_order_post_creates_order_and_items",
+      "update"
+    ],
+    "2": [
+      "frontend_static_js_main",
+      "frontend_static_js_main_init3dcardtilt",
+      "frontend_static_js_main_initajaxcart",
+      "frontend_static_js_main_initauthforms",
+      "frontend_static_js_main_initauthforms_displayfeedback",
+      "frontend_static_js_main_initcatalogfilter",
+      "frontend_static_js_main_initcatalogfilter_filtercards",
+      "frontend_static_js_main_initcatalogfilter_sortcards",
+      "frontend_static_js_main_initmobilemenu",
+      "frontend_static_js_main_initquantitysteppers",
+      "frontend_static_js_main_inittheme",
+      "frontend_static_js_main_initwhatsapplinks",
+      "frontend_static_js_main_showtoast",
+      "frontend_static_js_main_updatecartbadge"
+    ],
+    "3": [
+      "backend_app",
+      "backend_app_ensure_user_schema",
+      "backend_app_inject_cart_info",
+      "backend_init_db",
+      "backend_routes_init",
+      "context_processor",
+      "flask",
+      "sqlalchemy"
+    ],
+    "4": [
+      "backend_config",
+      "backend_config_config",
+      "backend_services_email_verification",
+      "dotenv",
+      "itsdangerous",
+      "itsdangerous_exc",
+      "os"
+    ],
+    "5": [
+      "backend_routes_cart",
+      "backend_routes_cart_add_to_cart",
+      "backend_routes_cart_cart",
+      "backend_routes_cart_py_route",
+      "backend_routes_cart_remove_from_cart",
+      "backend_routes_cart_update_cart",
+      "models"
+    ],
+    "6": [
+      "backend_routes_main",
+      "backend_routes_main_home",
+      "backend_routes_main_login",
+      "backend_routes_main_product_detail",
+      "backend_routes_main_products",
+      "backend_routes_main_py_route",
+      "backend_routes_main_register"
+    ],
+    "7": [
+      "backend_init"
+    ],
+    "8": [
+      "backend_routes_admin"
+    ],
+    "9": [
+      "backend_services_cart_service"
+    ],
+    "10": [
+      "backend_services_order_service"
+    ]
+  },
+  "cohesion": {
+    "0": 0.15789473684210525,
+    "1": 0.29523809523809524,
+    "2": 0.17582417582417584,
+    "3": 0.25,
+    "4": 0.3333333333333333,
+    "5": 0.42857142857142855,
+    "6": 0.47619047619047616,
+    "7": 1.0,
+    "8": 1.0,
+    "9": 1.0,
+    "10": 1.0
+  },
+  "gods": [
+    {
+      "id": "backend_models_user_user",
+      "label": "User",
+      "degree": 5
+    },
+    {
+      "id": "backend_models_order_orderitem",
+      "label": "OrderItem",
+      "degree": 5
+    },
+    {
+      "id": "backend_config_config",
+      "label": "Config",
+      "degree": 5
+    },
+    {
+      "id": "backend_routes_auth_register",
+      "label": "register()",
+      "degree": 5
+    },
+    {
+      "id": "backend_models_product_product",
+      "label": "Product",
+      "degree": 4
+    },
+    {
+      "id": "backend_services_email_verification_generate_verification_token",
+      "label": "generate_verification_token()",
+      "degree": 4
+    },
+    {
+      "id": "backend_services_email_verification_verify_verification_token",
+      "label": "verify_verification_token()",
+      "degree": 4
+    },
+    {
+      "id": "backend_routes_orders_order",
+      "label": "order()",
+      "degree": 4
+    },
+    {
+      "id": "backend_models_order_order",
+      "label": "Order",
+      "degree": 3
+    },
+    {
+      "id": "backend_routes_auth_login",
+      "label": "login()",
+      "degree": 3
+    }
+  ],
+  "surprises": [
+    {
+      "source": "setup_function()",
+      "target": "Product",
+      "source_files": [
+        "Tests/test_order_post.py",
+        "backend/models/product.py"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories"
+    },
+    {
+      "source": "generate_verification_token()",
+      "target": "Config",
+      "source_files": [
+        "backend/services/email_verification.py",
+        "backend/config.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    },
+    {
+      "source": "verify_verification_token()",
+      "target": "Config",
+      "source_files": [
+        "backend/services/email_verification.py",
+        "backend/config.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    },
+    {
+      "source": "register()",
+      "target": "User",
+      "source_files": [
+        "backend/routes/auth.py",
+        "backend/models/user.py"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "cross-file semantic connection"
+    },
+    {
+      "source": "order()",
+      "target": "Order",
+      "source_files": [
+        "backend/routes/orders.py",
+        "backend/models/order.py"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "cross-file semantic connection"
+    }
+  ],
+  "tokens": {
+    "input": 0,
+    "output": 0
+  }
+}

@@ -1,2 +1,8 @@
 $kind: collection
-name: New Collection
+description: ""
+variables:
+  base_url: http://127.0.0.1:5000
+  email: your registered email
+  password: your password
+  access_token: ""
+  name: Test User

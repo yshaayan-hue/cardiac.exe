@@ -1,5 +1,8 @@
 $kind: http-request
 name: New Request
-url: ""
+url: 'http://127.0.0.1:5000/api/auth/me'
 method: GET
 order: 1787386465505
+headers:
+  - key: Authorization
+    value: 'Bearer {{access_token}}'

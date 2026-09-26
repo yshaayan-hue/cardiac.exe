@@ -1,0 +1,26 @@
+$kind: http-request
+name: Login
+method: POST
+order: 1000
+url: '{{base_url}}/api/auth/login'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "email": "{{email}}",
+      "password": "{{password}}"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      const res = pm.response.json();
+      if (pm.response.code === 200 && res.access_token) {
+          pm.collectionVariables.set("access_token", res.access_token);
+          console.log("✅ Token saved to collection variable: access_token");
+      } else {
+          console.error("❌ Login failed:", JSON.stringify(res));
+      }

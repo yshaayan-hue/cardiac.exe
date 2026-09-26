@@ -1,5 +1,9 @@
 from flask import Blueprint, jsonify, request
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import (
+    create_access_token,
+    jwt_required,
+    get_jwt_identity
+)
 
 from ..extensions import db, csrf
 from ..models import User
@@ -32,9 +36,20 @@ def register():
             "error": "Request body must be JSON"
         }), 400
 
-    name = data.get("name", "").strip()
-    email = data.get("email", "").strip().lower()
-    password = data.get("password", "")
+    name = data.get(
+        "name",
+        ""
+    ).strip()
+
+    email = data.get(
+        "email",
+        ""
+    ).strip().lower()
+
+    password = data.get(
+        "password",
+        ""
+    )
 
     # -------------------------
     # Validate input
@@ -186,7 +201,10 @@ def verify_email(token):
     }), 200
 
 
-@auth_bp.route("/login", methods=["POST"])
+@auth_bp.route(
+    "/login",
+    methods=["POST"]
+)
 @csrf.exempt
 def login():
 
@@ -275,5 +293,47 @@ def login():
             "name": user.name,
             "email": user.email,
             "role": user.role
+        }
+    }), 200
+
+
+@auth_bp.route(
+    "/me",
+    methods=["GET"]
+)
+@jwt_required()
+def me():
+
+    # -------------------------
+    # Get user ID from JWT
+    # -------------------------
+
+    user_id = get_jwt_identity()
+
+    # -------------------------
+    # Find user
+    # -------------------------
+
+    user = db.session.get(
+        User,
+        int(user_id)
+    )
+
+    if not user:
+        return jsonify({
+            "error": "User not found"
+        }), 404
+
+    # -------------------------
+    # Return user information
+    # -------------------------
+
+    return jsonify({
+        "user": {
+            "id": user.id,
+            "name": user.name,
+            "email": user.email,
+            "role": user.role,
+            "email_verified": user.email_verified
         }
     }), 200

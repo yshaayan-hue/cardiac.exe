@@ -1,0 +1,51 @@
+$kind: http-request
+method: POST
+body:
+  type: json
+  content: ""
+order: 2000
+url: http://127.0.0.1:5000/api/auth/login
+auth:
+  type: jwt
+  credentials:
+    algorithm: HS256
+    isSecretBase64Encoded: false
+    payload: "{}"
+    addTokenTo: header
+    headerPrefix: Bearer
+    queryParamKey: token
+    header: "{}"
+scripts:
+  - type: beforeRequest
+    code: |-
+      const email = pm.collectionVariables.get("email");
+      const password = pm.collectionVariables.get("password");
+      const baseUrl = pm.collectionVariables.get("base_url");
+
+      if (!email || !password) {
+          console.warn("⚠️ Set the 'email' and 'password' collection variables before sending.");
+          return;
+      }
+
+      pm.sendRequest({
+          url: baseUrl + '/api/auth/login',
+          method: 'POST',
+          header: { 'Content-Type': 'application/json' },
+          body: {
+              mode: 'raw',
+              raw: JSON.stringify({ email, password })
+          }
+      }, function (err, res) {
+          if (err) {
+              console.error('❌ Auto-login failed:', err);
+              return;
+          }
+          if (res.code === 200) {
+              const token = res.json().access_token;
+              pm.collectionVariables.set("access_token", token);
+              console.log("✅ Token auto-fetched and ready");
+          } else {
+              console.error('❌ Login rejected:', JSON.stringify(res.json()));
+          }
+      });
+    language: text/javascript

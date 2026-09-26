@@ -8,6 +8,7 @@ from .routes import (
     cart_bp,
     orders_bp,
     auth_bp,
+    admin_bp,
 )
 
 
@@ -43,7 +44,8 @@ jwt.init_app(app)
 app.register_blueprint(main_bp)
 app.register_blueprint(cart_bp)
 app.register_blueprint(orders_bp)
-app.register_blueprint(auth_bp)
+app.register_blueprint(auth_bp) 
+app.register_blueprint(admin_bp)
 
 
 @app.context_processor
